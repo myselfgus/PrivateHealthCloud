@@ -1,85 +1,166 @@
 # HealthOS Private Cloud
 
+**Voither PrivateHealthCloud**
+
 HealthOS Private Cloud is a private healthcare cloud infrastructure optimized for Apple Silicon.
 
 It hosts clinical data, agents, AI models, and healthcare applications under native governance for consent, privacy, encryption, auditability, controlled data access, and interoperability.
 
 HealthOS is not an app, not an EHR skin, and not a single-device system. It is a private cloud platform where healthcare applications run on top of governed data and agent infrastructure.
 
-HealthOS does not require each user to own or operate a Mac. Apple Silicon is the preferred private cloud compute substrate, not the user-facing product.
+**HealthOS does not require each user to own or operate a Mac. Apple Silicon is the preferred private cloud compute substrate, not the user-facing product.**
 
-This repository is the initial conceptual and contractual scaffold for the platform. It may be presented as Voither PrivateHealthCloud in company contexts, while the architectural subject of this scaffold is HealthOS Private Cloud.
+This repository is the initial conceptual and contractual scaffold for the platform. It defines language, architecture, contracts, examples, and validation paths. It does not implement a production runtime.
 
-## What HealthOS Is
+## At A Glance
 
-HealthOS Private Cloud is infrastructure for governed healthcare computation. It lets applications, agents, models, and integrations operate over clinical data without making each application own compliance, identity, data custody, model routing, or reidentification logic.
+| Question | Answer |
+| --- | --- |
+| What is it? | A private healthcare cloud for governed clinical data, agents, models, applications, and integrations. |
+| Who is behind it? | Voither can present this repository as Voither PrivateHealthCloud. |
+| What is the platform name? | HealthOS Private Cloud. |
+| What is Apple Silicon here? | The preferred private cloud compute substrate. |
+| What is it not? | Not an app, not an EHR skin, not a UI, not a single-device system, not a finished runtime. |
+| Core rule | Apps, agents, models, and integrations access governed capabilities, not raw data. |
+| Current status | Conceptual and contractual scaffold only. |
 
-Applications and agents do not access raw storage directly. They request governed capabilities, receive mediated references or governed projections, and leave audit and provenance trails.
+## Product Boundary
 
-## What HealthOS Is Not
+```mermaid
+flowchart LR
+  subgraph Outside["Users and external systems"]
+    Patient["Patient"]
+    Professional["Professional"]
+    ExternalSystem["External clinical system"]
+    ThirdPartyApp["Third-party app"]
+  end
 
-HealthOS is not a finished product in this repository. It is not an EHR, not a user-facing Mac app, not a single-machine system, and not a runtime implementation yet.
+  subgraph HealthOS["HealthOS Private Cloud"]
+    Gateway["Capability / API / MCP gateways"]
+    Governance["Governance Layer"]
+    Data["Data Layer"]
+    Agents["Agent Layer"]
+    Models["Model Layer"]
+    Apps["Application Layer"]
+    Integrations["Integration Layer"]
+    Infra["Infrastructure Layer"]
+  end
 
-This scaffold does not implement real storage, cryptography, model execution, UI, integrations, or clinical workflows. It defines the initial language, architecture, contracts, examples, and validation path for future implementation.
+  Patient --> Apps
+  Professional --> Apps
+  ExternalSystem --> Integrations
+  ThirdPartyApp --> Gateway
+
+  Apps --> Gateway
+  Integrations --> Gateway
+  Agents --> Gateway
+  Gateway --> Governance
+  Governance --> Data
+  Governance --> Models
+  Governance --> Agents
+  Data --> Gateway
+  Models --> Gateway
+  Agents --> Gateway
+  Gateway --> Apps
+  Gateway --> Integrations
+  Infra -. supports .-> Data
+  Infra -. supports .-> Models
+  Infra -. supports .-> Governance
+```
+
+HealthOS keeps compliance-sensitive work inside the platform boundary. Applications ask for capabilities. Governance decides. Services enforce. Audit and provenance record what happened.
 
 ## Architecture
 
-```text
-HealthOS Private Cloud
-|-- Infrastructure Layer
-|-- Data Layer
-|-- Governance Layer
-|-- Agent Layer
-|-- Model Layer
-|-- Application Layer
-`-- Integration Layer
+```mermaid
+flowchart TB
+  H["HealthOS Private Cloud"]
+
+  H --> I["Infrastructure Layer"]
+  H --> D["Data Layer"]
+  H --> G["Governance Layer"]
+  H --> A["Agent Layer"]
+  H --> M["Model Layer"]
+  H --> AP["Application Layer"]
+  H --> IN["Integration Layer"]
+
+  I --> I1["Apple Silicon compute"]
+  I --> I2["Private networking"]
+  I --> I3["Encrypted storage"]
+  I --> I4["Deployment, observability, backup/restore"]
+
+  D --> D1["Canonical records"]
+  D --> D2["Artifacts"]
+  D --> D3["Relational, semantic, graph projections"]
+  D --> D4["Agent memory and capability index"]
+
+  G --> G1["Consent and purpose"]
+  G --> G2["Access policy"]
+  G --> G3["Reidentification policy"]
+  G --> G4["Audit, provenance, human approval"]
+
+  A --> A1["Patient agents"]
+  A --> A2["Professional agents"]
+  A --> A3["Workflow, safety, data, integration agents"]
+
+  M --> M1["Local/private model providers"]
+  M --> M2["Transcription, embeddings, reranking, LLMs"]
+  M --> M3["Remote providers only when allowed"]
+
+  AP --> AP1["Scribe"]
+  AP --> AP2["Veridia"]
+  AP --> AP3["CloudClinic and future apps"]
+
+  IN --> IN1["APIs and MCP"]
+  IN --> IN2["Webhooks and import/export"]
+  IN --> IN3["Future FHIR/HL7 connectors"]
 ```
 
-### Infrastructure Layer
-
-Apple Silicon compute, private networking, encrypted storage, deployment, observability, backup/restore, and future container/runtime services.
-
-### Data Layer
-
-Patient records, identity data, clinical artifacts, consent records, audit events, semantic indexes, graph representations, agent memory, and projections for applications.
-
-### Governance Layer
-
-Consent, purpose, roles, permissions, data sensitivity, reidentification, model-use policy, audit requirements, and human approval gates.
-
-### Agent Layer
-
-Patient agents, professional agents, clinical workflow agents, safety/review agents, data agents, and integration agents operating under explicit mandate and governance.
-
-### Model Layer
-
-Governed local or private-cloud model providers, including future MLX, Core ML, Foundation Models, transcription, embeddings, reranking, LLMs, and remote providers only when explicitly allowed.
-
-### Application Layer
-
-Scribe, Veridia, CloudClinic, future apps, third-party apps, dashboards, and clinical tools. Applications declare capabilities and consume governed results.
-
-### Integration Layer
-
-Internal APIs, MCP, future FHIR/HL7 connectors, webhooks, clinical system connectors, export/import, and provider integrations.
+| Layer | Responsibility | Must Not Do |
+| --- | --- | --- |
+| Infrastructure | Apple Silicon compute, private networking, encrypted storage, deployment, observability, backup/restore. | Treat hardware as the user-facing product or assume one device per user. |
+| Data | Canonical records, artifacts, projections, semantic indexes, graph views, agent memory, capability index. | Expose raw storage as the app integration surface. |
+| Governance | Decide allow, deny, degrade, or require human approval for specific operations. | Rely on apps or agents to self-enforce policy. |
+| Agent | Execute scoped workflows under mandate, purpose, audit, and review. | Act as unrestricted authorities or raw key custodians. |
+| Model | Route governed model work with locality, PHI policy, provenance, and fallback behavior. | Allow direct app calls to model providers. |
+| Application | Provide product experiences through declared capabilities. | Own compliance, identity, model routing, or clinical data custody. |
+| Integration | Connect internal and external systems through governed interfaces. | Export or import data outside consent and policy scope. |
 
 ## Governed Capability Pattern
 
-Apps, agents, models, and integrations do not access data directly. They access governed capabilities.
+Apps, agents, models, and integrations do not access clinical data directly. They access governed capabilities.
 
-```text
-Application / Agent / Integration Request
-  -> Capability / API / MCP Gateway
-  -> Governance Decision
-  -> Data / Agent / Model / Execution Service
-  -> Provenance + Audit
-  -> Governed Result
+```mermaid
+sequenceDiagram
+  participant App as App / Agent / Integration
+  participant Gateway as Capability Gateway
+  participant Gov as Governance Service
+  participant Data as Data Service
+  participant Model as Model Service
+  participant Audit as Audit + Provenance
+
+  App->>Gateway: Request capability with actor, patient, purpose, inputs
+  Gateway->>Gov: Ask for governance decision
+  Gov-->>Gateway: allow / deny / degrade / require approval
+  alt allowed
+    Gateway->>Data: Request governed projection or safe refs
+    opt model use allowed
+      Gateway->>Model: Run approved model on minimized context
+      Model-->>Audit: Record model provenance
+    end
+    Data-->>Audit: Record data access
+    Gateway-->>Audit: Record capability outcome
+    Gateway-->>App: Return governed result
+  else denied or approval required
+    Gateway-->>Audit: Record blocked or pending outcome
+    Gateway-->>App: Return denied, degraded, or approval-required response
+  end
 ```
 
-Example request:
+Example:
 
 ```text
-An app or agent asks:
+App or agent asks:
 "I need to summarize this patient's history for this clinical purpose."
 
 HealthOS checks:
@@ -98,38 +179,60 @@ HealthOS returns:
 a secure, limited, audited, and traceable context.
 ```
 
-## Data Layer
+## Data Layer: Multi-Representational By Design
 
 HealthOS does not treat the database as one application-owned store. The Data Layer is multi-representational and AI-native.
 
-1. Canonical Record: original clinical data, encrypted, auditable, and preserved.
-2. Event Log: append-only operational history for audit, reconstruction, debugging, and provenance.
-3. Artifact Store: transcripts, notes, outputs, reports, documents, embeddings, and intermediate derived objects.
-4. Relational Projection: structured query views for patient, session, professional, organization, consent, and status.
-5. Semantic Projection: chunks, embeddings, summaries, concepts, entities, and clinical relationships.
-6. Graph Projection: relationships among events, symptoms, medications, hypotheses, timing, agents, artifacts, and decisions.
-7. Agent Memory: operational memory separated by agent, patient, professional, organization, purpose, and scope.
-8. Capability Index: what can be accessed by whom, under which consent, for which purpose, and through which capability.
+```mermaid
+flowchart TB
+  Canonical["1. Canonical Record<br/>Original, encrypted, auditable, preserved"]
+  EventLog["2. Event Log<br/>Append-only operational history"]
+  Artifact["3. Artifact Store<br/>Transcripts, notes, reports, documents, embeddings"]
+  Relational["4. Relational Projection<br/>Fast structured queries"]
+  Semantic["5. Semantic Projection<br/>Chunks, embeddings, summaries, entities"]
+  Graph["6. Graph Projection<br/>Events, symptoms, medications, hypotheses, timing"]
+  Memory["7. Agent Memory<br/>Scoped by agent, patient, purpose, organization"]
+  Capability["8. Capability Index<br/>Who can access what, why, and how"]
 
-The key rule is simple: AI does not access the raw clinical record. It accesses governed projections.
+  Canonical --> EventLog
+  Canonical --> Artifact
+  EventLog --> Relational
+  Artifact --> Semantic
+  Artifact --> Graph
+  Semantic --> Memory
+  Graph --> Memory
+  Relational --> Capability
+  Semantic --> Capability
+  Graph --> Capability
+```
 
-```text
-Original audio
-  -> canonical encrypted artifact
-Transcript
-  -> clinical artifact
-Patient speech excerpts
-  -> semantic chunks
-ASL / VDLP / GEM / other clinical analyses
-  -> derived clinical artifacts
-Longitudinal summary
-  -> agent-readable projection
-Embedding
-  -> semantic index
-Clinical relationships
-  -> graph projection
-Everything
-  -> provenance graph + audit log
+**Key rule:** AI does not access the raw clinical record. AI accesses governed projections.
+
+```mermaid
+flowchart LR
+  Audio["Original audio"]
+  Encrypted["Canonical encrypted artifact"]
+  Transcript["Clinical transcript artifact"]
+  Chunks["Semantic chunks"]
+  Analyses["ASL / VDLP / GEM / other clinical analyses"]
+  Summary["Longitudinal summary"]
+  Embedding["Semantic index"]
+  Graph["Graph projection"]
+  Audit["Provenance graph + audit log"]
+
+  Audio --> Encrypted
+  Encrypted --> Transcript
+  Transcript --> Chunks
+  Chunks --> Analyses
+  Analyses --> Summary
+  Chunks --> Embedding
+  Analyses --> Graph
+  Encrypted --> Audit
+  Transcript --> Audit
+  Analyses --> Audit
+  Summary --> Audit
+  Embedding --> Audit
+  Graph --> Audit
 ```
 
 Capability example:
@@ -140,9 +243,61 @@ search_patient_context(patientRef, purpose, query)
 
 HealthOS decides who is asking, which consent applies, whether reidentification is allowed, whether embeddings or model calls are allowed, what data can leave the Data Layer, and whether human approval is required. Only then does it assemble a safe context.
 
+## Governance Boundary
+
+```mermaid
+flowchart LR
+  Request["Specific operation request"]
+  PDP["Policy Decision Point"]
+  Decision{"GovernanceDecision"}
+  PEP["Policy Enforcement Point"]
+  Service["Data / Agent / Model / Integration service"]
+  Audit["AuditEvent"]
+  Provenance["ProvenanceRecord"]
+  Human["HumanApprovalGate"]
+
+  Request --> PDP
+  PDP --> Decision
+  Decision -->|allow| PEP
+  Decision -->|degrade| PEP
+  Decision -->|deny| Audit
+  Decision -->|require_human_approval| Human
+  Human --> PEP
+  PEP --> Service
+  Service --> Audit
+  Service --> Provenance
+```
+
+Every relevant operation must generate or reference a governance decision:
+
+- clinical data read
+- artifact write
+- reidentification
+- export
+- model call
+- agent call
+- external integration use
+- document finalization
+
 ## Agents
 
 Each patient may have a Patient Agent. The Patient Agent is not just a chatbot and is not a literal custodian of raw cryptographic keys. It operationally represents the patient's mandate, participates in governed access decisions, records events and rationale, requests reidentification only when allowed, and operates under audit and review.
+
+```mermaid
+flowchart TB
+  Patient["Patient mandate"]
+  PatientAgent["Patient Agent"]
+  Governance["Governance"]
+  Memory["Scoped governed memory"]
+  Event["AgentEvent"]
+  Result["Governed action or rationale"]
+
+  Patient --> PatientAgent
+  PatientAgent --> Governance
+  Governance --> Memory
+  Governance --> Event
+  Event --> Result
+```
 
 Professional, workflow, safety, data, and integration agents follow the same pattern: mandate, scope, governed context, traceability, and review.
 
@@ -150,73 +305,84 @@ Professional, workflow, safety, data, and integration agents follow the same pat
 
 No application calls a model directly. Model providers are declared by manifest and governed by policy.
 
+```mermaid
+flowchart LR
+  Capability["Capability request"]
+  Gov["Governance decision"]
+  Manifest["ModelProviderManifest"]
+  Router["Model routing"]
+  Local["Local / private-cloud provider"]
+  External["External provider"]
+  Provenance["Model provenance"]
+
+  Capability --> Gov
+  Gov --> Manifest
+  Manifest --> Router
+  Router --> Local
+  Router -. denied by default unless allowed .-> External
+  Local --> Provenance
+  External --> Provenance
+```
+
 Each provider must define runtime, locality, PHI policy, capability profile, versioning, provenance behavior, and fallback behavior. Local and private-cloud providers are preferred for sensitive work. External providers are denied by default unless governance explicitly allows them.
 
 ## Applications
 
 Applications are governed clients of HealthOS. They declare capabilities, requested data classes, outputs, and human approval points. They receive safe references, mediated views, or governed results rather than raw storage access.
 
-Initial application examples:
-
-- Scribe: clinical documentation, transcription, summarization, and draft generation.
-- Veridia: patient experience, consent, identity, health memory, and access control.
-- CloudClinic: service operations, institutional workflows, queues, and clinical coordination.
+| Application | Role | Example Capabilities |
+| --- | --- | --- |
+| Scribe | Clinical documentation, transcription, summarization, draft generation. | `transcribe_session_audio`, `create_clinical_draft`, `summarize_patient_context`, `search_patient_context` |
+| Veridia | Patient experience, consent, identity review, health memory, access control. | consent review, access history, patient context review, export request |
+| CloudClinic | Service operations, institutional workflows, queues, clinical coordination. | workflow queue coordination, task assignment, governed integration request |
 
 ## Integrations
 
-Integrations connect HealthOS to external systems through governed APIs, MCP, webhooks, future FHIR/HL7 connectors, imports, exports, and provider-specific adapters. Integration access is mediated by capability requests, governance decisions, audit events, and provenance records.
+Integrations connect HealthOS to external systems through governed APIs, MCP, webhooks, future FHIR/HL7 connectors, imports, exports, and provider-specific adapters.
+
+```mermaid
+flowchart LR
+  External["External system"]
+  IntegrationGateway["Integration Gateway"]
+  Capability["CapabilityRequest"]
+  Governance["GovernanceDecision"]
+  Transform["Transform / import / export"]
+  Audit["Audit + provenance"]
+
+  External --> IntegrationGateway
+  IntegrationGateway --> Capability
+  Capability --> Governance
+  Governance --> Transform
+  Transform --> Audit
+```
 
 ## First Proof
 
-The first proof is not a complete app. It is a governed capability path:
+The first proof is not a complete app. It is a governed capability path.
 
-```text
-Scribe requests search_patient_context
-  -> application gateway validates the request
-  -> governance service decides allow / deny / degrade / require human approval
-  -> data service returns safe refs or governed projections
-  -> model service is called only if permitted
-  -> audit and provenance are recorded
-  -> Scribe receives a traceable result
+```mermaid
+flowchart LR
+  Scribe["Scribe"]
+  Request["search_patient_context"]
+  AppGateway["Application Gateway"]
+  Governance["Governance Service"]
+  Data["Data Service"]
+  Model["Model Service if permitted"]
+  Audit["Audit + provenance"]
+  Result["Traceable governed result"]
+
+  Scribe --> Request
+  Request --> AppGateway
+  AppGateway --> Governance
+  Governance --> Data
+  Governance --> Model
+  Data --> Audit
+  Model --> Audit
+  Audit --> Result
+  Result --> Scribe
 ```
 
-## Initial Milestones
-
-### Milestone 0 - Conceptual and Contractual Kernel
-
-- Strong README.
-- Simple layered architecture.
-- Essential docs.
-- JSON contracts.
-- Valid examples.
-- Naming guardrails.
-
-### Milestone 1 - Private Cloud Skeleton
-
-- Initial service configuration.
-- Artifact store outline.
-- Audit log outline.
-- Minimal governance evaluator.
-- Minimal application and integration gateway.
-- No single-device assumption.
-
-### Milestone 2 - First Governed Capability
-
-- create_patient_ref.
-- create_session_artifact.
-- request_context_for_agent.
-- write_agent_event.
-- search_patient_context.
-
-### Milestone 3 - Governed Model Runtime
-
-- MLX/provider outline.
-- Local transcription provider outline.
-- Embedding provider outline.
-- Model provenance.
-- Governance-based provider denial.
-
-### Milestone 4 - Scribe Proof
+Acceptance for the first proof:
 
 - Scribe does not access data directly.
 - Scribe calls a capability.
@@ -225,6 +391,62 @@ Scribe requests search_patient_context
 - Output generates provenance.
 - Finalization requires approval when configured.
 
+## Repository Map
+
+```text
+PrivateHealthCloud/
+|-- README.md
+|-- docs/                 Conceptual architecture and guardrails
+|-- contracts/            JSON Schemas for data, identity, consent, governance, agents, models, apps, integrations, audit, security
+|-- services/             Service responsibility placeholders, no runtime implementation
+|-- storage/              Future storage schemas, migrations, projections, indexes
+|-- apps/                 Governed app examples: Scribe, Veridia, CloudClinic
+|-- infra/                Apple Silicon infrastructure, private networking, containers, observability, backup
+|-- examples/             Minimal valid JSON examples
+`-- tests/                Future validation plan
+```
+
+## Contracts And Examples
+
+| Area | Contracts |
+| --- | --- |
+| Data | `PatientRef`, `ArtifactRef`, `DataAccessRequest` |
+| Identity | `ActorRef`, `OrganizationRef`, `ServiceIdentity` |
+| Consent | `ConsentRecord` |
+| Governance | `GovernanceDecision` |
+| Agents | `AgentManifest`, `AgentEvent` |
+| Models | `ModelProviderManifest` |
+| Applications | `ApplicationManifest` |
+| Integrations | `CapabilityRequest` |
+| Audit | `AuditEvent`, `ProvenanceRecord` |
+| Security | `AccessPolicy` |
+
+Validate the scaffold:
+
+```bash
+npm run validate
+```
+
+Current validation checks:
+
+- JSON Schemas compile.
+- Example application, agent, capability request, governance decision, consent record, audit event, and provenance record validate against their matching schemas.
+
+## Initial Milestones
+
+```mermaid
+flowchart LR
+  M0["Milestone 0<br/>Conceptual and Contractual Kernel<br/>README, docs, JSON contracts, examples"]
+  M1["Milestone 1<br/>Private Cloud Skeleton<br/>service outlines, artifact store, audit log, governance evaluator"]
+  M2["Milestone 2<br/>First Governed Capability<br/>patient refs, session artifacts, agent context, search"]
+  M3["Milestone 3<br/>Governed Model Runtime<br/>providers, transcription, embeddings, provenance, denial policy"]
+  M4["Milestone 4<br/>Scribe Proof<br/>governed projections, provenance, approval gates"]
+
+  M0 --> M1 --> M2 --> M3 --> M4
+```
+
 ## Repository Status
 
-This repository is a conceptual and contractual scaffold. It has no production claims and does not implement a real healthcare runtime. Its purpose is to make the next phase buildable, reviewable, and aligned around governed capabilities, data minimization, privacy, auditability, and interoperability.
+This repository is a conceptual and contractual scaffold. It has no production claims and does not implement a real healthcare runtime, UI, database, cryptography, model execution, clinical workflow, or external integration.
+
+Its purpose is to make the next phase buildable, reviewable, and aligned around governed capabilities, data minimization, privacy, auditability, and interoperability.
