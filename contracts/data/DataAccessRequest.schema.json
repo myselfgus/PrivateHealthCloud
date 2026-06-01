@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.healthos.local/data/DataAccessRequest.schema.json",
+  "title": "DataAccessRequest",
+  "description": "A request for governed access to patient data or projections.",
+  "type": "object",
+  "required": [
+    "version",
+    "request_id",
+    "actor_ref",
+    "organization_ref",
+    "patient_ref",
+    "purpose",
+    "query",
+    "requested_data_classes",
+    "requested_outputs",
+    "allow_reidentification",
+    "allow_remote_model",
+    "created_at"
+  ],
+  "properties": {
+    "version": { "type": "string", "const": "0.1.0" },
+    "request_id": { "type": "string", "minLength": 1 },
+    "actor_ref": { "type": "string", "minLength": 1 },
+    "organization_ref": { "type": "string", "minLength": 1 },
+    "patient_ref": { "type": "string", "minLength": 1 },
+    "purpose": { "type": "string", "minLength": 1 },
+    "query": { "type": "string", "minLength": 1 },
+    "requested_data_classes": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "requested_outputs": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "allow_reidentification": { "type": "boolean" },
+    "allow_remote_model": { "type": "boolean" },
+    "created_at": { "type": "string", "minLength": 1 }
+  },
+  "additionalProperties": false
+}

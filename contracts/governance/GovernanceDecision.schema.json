@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.healthos.local/governance/GovernanceDecision.schema.json",
+  "title": "GovernanceDecision",
+  "description": "A policy decision for a specific governed operation.",
+  "type": "object",
+  "required": [
+    "version",
+    "decision_id",
+    "request_id",
+    "actor_ref",
+    "organization_ref",
+    "patient_ref",
+    "purpose",
+    "decision",
+    "allowed",
+    "data_classes",
+    "permitted_outputs",
+    "consent_scope",
+    "reidentification_allowed",
+    "model_use_allowed",
+    "remote_model_allowed",
+    "requires_audit",
+    "requires_provenance",
+    "requires_human_approval",
+    "reason",
+    "created_at"
+  ],
+  "properties": {
+    "version": { "type": "string", "const": "0.1.0" },
+    "decision_id": { "type": "string", "minLength": 1 },
+    "request_id": { "type": "string", "minLength": 1 },
+    "actor_ref": { "type": "string", "minLength": 1 },
+    "organization_ref": { "type": "string", "minLength": 1 },
+    "patient_ref": { "type": "string", "minLength": 1 },
+    "purpose": { "type": "string", "minLength": 1 },
+    "decision": {
+      "type": "string",
+      "enum": ["allow", "deny", "degrade", "require_human_approval"]
+    },
+    "allowed": { "type": "boolean" },
+    "data_classes": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "permitted_outputs": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "consent_scope": { "type": "string", "minLength": 1 },
+    "reidentification_allowed": { "type": "boolean" },
+    "model_use_allowed": { "type": "boolean" },
+    "remote_model_allowed": { "type": "boolean" },
+    "requires_audit": { "type": "boolean" },
+    "requires_provenance": { "type": "boolean" },
+    "requires_human_approval": { "type": "boolean" },
+    "reason": { "type": "string", "minLength": 1 },
+    "constraints": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "created_at": { "type": "string", "minLength": 1 }
+  },
+  "additionalProperties": false
+}

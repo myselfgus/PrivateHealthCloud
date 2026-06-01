@@ -1,0 +1,32 @@
+{
+  "version": "0.1.0",
+  "app_ref": "app_scribe",
+  "name": "Scribe",
+  "app_type": "clinical_documentation",
+  "organization_ref": "org_voither_demo",
+  "declared_capabilities": [
+    "transcribe_session_audio",
+    "create_clinical_draft",
+    "summarize_patient_context",
+    "search_patient_context"
+  ],
+  "requested_data_classes": [
+    "session_audio",
+    "transcript",
+    "clinical_artifact",
+    "governed_projection"
+  ],
+  "allowed_outputs": [
+    "clinical_draft",
+    "session_summary",
+    "artifact_ref"
+  ],
+  "requires_governance": true,
+  "human_approval_points": [
+    "finalize_clinical_document"
+  ],
+  "direct_storage_access": false,
+  "direct_model_access": false,
+  "direct_identity_access": false,
+  "created_at": "2026-06-01T00:00:00Z"
+}

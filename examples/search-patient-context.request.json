@@ -1,0 +1,17 @@
+{
+  "version": "0.1.0",
+  "request_id": "req_search_patient_context_demo",
+  "capability": "search_patient_context",
+  "actor_ref": "app_scribe",
+  "organization_ref": "org_voither_demo",
+  "patient_ref": "patient_demo_001",
+  "purpose": "clinical_documentation",
+  "input_refs": [
+    "artifact_session_transcript_demo"
+  ],
+  "requested_outputs": [
+    "governed_context_summary",
+    "supporting_artifact_refs"
+  ],
+  "created_at": "2026-06-01T00:00:00Z"
+}

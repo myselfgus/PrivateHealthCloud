@@ -1,0 +1,26 @@
+{
+  "version": "0.1.0",
+  "agent_ref": "agent_patient_operational_mandate_demo",
+  "agent_type": "patient_agent",
+  "scope": "operational_patient_mandate_not_chatbot_not_key_custodian",
+  "organization_ref": "org_voither_demo",
+  "allowed_purposes": [
+    "patient_context_review",
+    "consent_review",
+    "care_coordination"
+  ],
+  "allowed_capabilities": [
+    "search_patient_context",
+    "request_reidentification_review",
+    "write_agent_event"
+  ],
+  "memory_policy": {
+    "scope": "patient_purpose_bound",
+    "stores_raw_keys": false,
+    "stores_unbounded_phi": false,
+    "requires_governed_projection": true,
+    "notes": "Represents patient mandate under governance; not a chatbot and not a raw key custodian."
+  },
+  "requires_governance": true,
+  "created_at": "2026-06-01T00:00:00Z"
+}

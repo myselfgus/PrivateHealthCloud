@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.healthos.local/applications/ApplicationManifest.schema.json",
+  "title": "ApplicationManifest",
+  "description": "A manifest for applications that request governed HealthOS capabilities.",
+  "type": "object",
+  "required": [
+    "version",
+    "app_ref",
+    "name",
+    "app_type",
+    "organization_ref",
+    "declared_capabilities",
+    "requested_data_classes",
+    "allowed_outputs",
+    "requires_governance",
+    "human_approval_points",
+    "created_at"
+  ],
+  "properties": {
+    "version": { "type": "string", "const": "0.1.0" },
+    "app_ref": { "type": "string", "minLength": 1 },
+    "name": { "type": "string", "minLength": 1 },
+    "app_type": { "type": "string", "minLength": 1 },
+    "organization_ref": { "type": "string", "minLength": 1 },
+    "declared_capabilities": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "requested_data_classes": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "allowed_outputs": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "requires_governance": { "type": "boolean" },
+    "human_approval_points": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "direct_storage_access": { "type": "boolean" },
+    "direct_model_access": { "type": "boolean" },
+    "direct_identity_access": { "type": "boolean" },
+    "created_at": { "type": "string", "minLength": 1 }
+  },
+  "additionalProperties": false
+}

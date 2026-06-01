@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.healthos.local/security/AccessPolicy.schema.json",
+  "title": "AccessPolicy",
+  "description": "A conceptual policy document for governed access decisions.",
+  "type": "object",
+  "required": [
+    "version",
+    "policy_ref",
+    "organization_ref",
+    "policy_type",
+    "applies_to",
+    "rules",
+    "default_decision",
+    "created_at"
+  ],
+  "properties": {
+    "version": { "type": "string", "const": "0.1.0" },
+    "policy_ref": { "type": "string", "minLength": 1 },
+    "organization_ref": { "type": "string", "minLength": 1 },
+    "policy_type": { "type": "string", "minLength": 1 },
+    "applies_to": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["effect", "condition", "description"],
+        "properties": {
+          "effect": { "type": "string", "enum": ["allow", "deny", "degrade", "require_human_approval"] },
+          "condition": { "type": "string", "minLength": 1 },
+          "description": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "default_decision": {
+      "type": "string",
+      "enum": ["deny", "degrade", "require_human_approval"]
+    },
+    "created_at": { "type": "string", "minLength": 1 }
+  },
+  "additionalProperties": false
+}

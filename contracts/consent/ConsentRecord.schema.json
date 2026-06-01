@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.healthos.local/consent/ConsentRecord.schema.json",
+  "title": "ConsentRecord",
+  "description": "A consent grant scoped by patient, organization, purpose, data class, capability, and model policy.",
+  "type": "object",
+  "required": [
+    "version",
+    "consent_ref",
+    "patient_ref",
+    "organization_ref",
+    "granted_to",
+    "purposes",
+    "data_classes",
+    "capabilities",
+    "allows_reidentification",
+    "allows_remote_model",
+    "valid_from",
+    "valid_until",
+    "revoked_at",
+    "created_at"
+  ],
+  "properties": {
+    "version": { "type": "string", "const": "0.1.0" },
+    "consent_ref": { "type": "string", "minLength": 1 },
+    "patient_ref": { "type": "string", "minLength": 1 },
+    "organization_ref": { "type": "string", "minLength": 1 },
+    "granted_to": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "purposes": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "data_classes": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "capabilities": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "allows_reidentification": { "type": "boolean" },
+    "allows_remote_model": { "type": "boolean" },
+    "valid_from": { "type": "string", "minLength": 1 },
+    "valid_until": { "type": ["string", "null"], "minLength": 1 },
+    "revoked_at": { "type": ["string", "null"], "minLength": 1 },
+    "created_at": { "type": "string", "minLength": 1 }
+  },
+  "additionalProperties": false
+}

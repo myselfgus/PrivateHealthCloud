@@ -1,0 +1,31 @@
+{
+  "version": "0.1.0",
+  "consent_ref": "consent_clinical_documentation_active",
+  "patient_ref": "patient_demo_001",
+  "organization_ref": "org_voither_demo",
+  "granted_to": [
+    "app_scribe",
+    "agent_patient_operational_mandate_demo"
+  ],
+  "purposes": [
+    "clinical_documentation"
+  ],
+  "data_classes": [
+    "session_audio",
+    "transcript",
+    "clinical_artifact",
+    "governed_projection"
+  ],
+  "capabilities": [
+    "transcribe_session_audio",
+    "create_clinical_draft",
+    "summarize_patient_context",
+    "search_patient_context"
+  ],
+  "allows_reidentification": false,
+  "allows_remote_model": false,
+  "valid_from": "2026-06-01T00:00:00Z",
+  "valid_until": "2026-12-01T00:00:00Z",
+  "revoked_at": null,
+  "created_at": "2026-06-01T00:00:00Z"
+}

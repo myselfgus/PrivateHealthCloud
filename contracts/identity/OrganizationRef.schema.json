@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.healthos.local/identity/OrganizationRef.schema.json",
+  "title": "OrganizationRef",
+  "description": "A reference to an organization or institutional tenant boundary.",
+  "type": "object",
+  "required": [
+    "version",
+    "organization_ref",
+    "organization_type",
+    "data_region",
+    "created_at"
+  ],
+  "properties": {
+    "version": { "type": "string", "const": "0.1.0" },
+    "organization_ref": { "type": "string", "minLength": 1 },
+    "organization_type": { "type": "string", "minLength": 1 },
+    "data_region": { "type": "string", "minLength": 1 },
+    "created_at": { "type": "string", "minLength": 1 }
+  },
+  "additionalProperties": false
+}

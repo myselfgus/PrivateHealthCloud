@@ -1,0 +1,12 @@
+{
+  "version": "0.1.0",
+  "audit_event_id": "audit_search_patient_context_demo",
+  "event_type": "capability_request_decided",
+  "actor_ref": "app_scribe",
+  "organization_ref": "org_voither_demo",
+  "patient_ref": "patient_demo_001",
+  "target_ref": "req_search_patient_context_demo",
+  "governance_decision_ref": "gov_decision_allow_demo",
+  "outcome": "allowed",
+  "created_at": "2026-06-01T00:00:00Z"
+}

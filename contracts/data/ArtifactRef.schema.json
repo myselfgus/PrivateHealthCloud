@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.healthos.local/data/ArtifactRef.schema.json",
+  "title": "ArtifactRef",
+  "description": "A governed reference to a clinical or derived artifact.",
+  "type": "object",
+  "required": [
+    "version",
+    "artifact_ref",
+    "patient_ref",
+    "organization_ref",
+    "artifact_type",
+    "data_class",
+    "storage_class",
+    "provenance_ref",
+    "created_at"
+  ],
+  "properties": {
+    "version": { "type": "string", "const": "0.1.0" },
+    "artifact_ref": { "type": "string", "minLength": 1 },
+    "patient_ref": { "type": "string", "minLength": 1 },
+    "organization_ref": { "type": "string", "minLength": 1 },
+    "artifact_type": { "type": "string", "minLength": 1 },
+    "data_class": { "type": "string", "minLength": 1 },
+    "storage_class": { "type": "string", "minLength": 1 },
+    "provenance_ref": { "type": "string", "minLength": 1 },
+    "created_at": { "type": "string", "minLength": 1 }
+  },
+  "additionalProperties": false
+}

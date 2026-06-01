@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.healthos.local/agents/AgentEvent.schema.json",
+  "title": "AgentEvent",
+  "description": "A traceable event emitted by a governed agent.",
+  "type": "object",
+  "required": [
+    "version",
+    "event_id",
+    "agent_ref",
+    "agent_type",
+    "actor_ref",
+    "organization_ref",
+    "patient_ref",
+    "purpose",
+    "event_type",
+    "input_refs",
+    "output_refs",
+    "governance_decision_ref",
+    "provenance_ref",
+    "created_at"
+  ],
+  "properties": {
+    "version": { "type": "string", "const": "0.1.0" },
+    "event_id": { "type": "string", "minLength": 1 },
+    "agent_ref": { "type": "string", "minLength": 1 },
+    "agent_type": { "type": "string", "minLength": 1 },
+    "actor_ref": { "type": "string", "minLength": 1 },
+    "organization_ref": { "type": "string", "minLength": 1 },
+    "patient_ref": { "type": "string", "minLength": 1 },
+    "purpose": { "type": "string", "minLength": 1 },
+    "event_type": { "type": "string", "minLength": 1 },
+    "input_refs": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "output_refs": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "governance_decision_ref": { "type": "string", "minLength": 1 },
+    "provenance_ref": { "type": "string", "minLength": 1 },
+    "created_at": { "type": "string", "minLength": 1 }
+  },
+  "additionalProperties": false
+}

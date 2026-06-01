@@ -1,0 +1,14 @@
+{
+  "version": "0.1.0",
+  "provenance_ref": "prov_governed_context_summary_demo",
+  "source_refs": [
+    "artifact_session_transcript_demo",
+    "artifact_prior_summary_demo"
+  ],
+  "generated_by": "capability:search_patient_context",
+  "model_provider_ref": "model_private_cloud_summary_demo",
+  "agent_ref": null,
+  "application_ref": "app_scribe",
+  "governance_decision_ref": "gov_decision_allow_demo",
+  "created_at": "2026-06-01T00:00:00Z"
+}

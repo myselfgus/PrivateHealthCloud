@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.healthos.local/identity/ActorRef.schema.json",
+  "title": "ActorRef",
+  "description": "A governed reference to the actor making or originating a request.",
+  "type": "object",
+  "required": [
+    "version",
+    "actor_ref",
+    "actor_type",
+    "organization_ref",
+    "display_name",
+    "created_at"
+  ],
+  "properties": {
+    "version": { "type": "string", "const": "0.1.0" },
+    "actor_ref": { "type": "string", "minLength": 1 },
+    "actor_type": {
+      "type": "string",
+      "enum": [
+        "patient",
+        "professional",
+        "organization_admin",
+        "application",
+        "agent",
+        "service",
+        "integration",
+        "system"
+      ]
+    },
+    "organization_ref": { "type": "string", "minLength": 1 },
+    "display_name": { "type": "string", "minLength": 1 },
+    "created_at": { "type": "string", "minLength": 1 }
+  },
+  "additionalProperties": false
+}

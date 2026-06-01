@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.healthos.local/agents/AgentManifest.schema.json",
+  "title": "AgentManifest",
+  "description": "A manifest describing a governed agent, its scope, capabilities, and memory policy.",
+  "type": "object",
+  "required": [
+    "version",
+    "agent_ref",
+    "agent_type",
+    "scope",
+    "organization_ref",
+    "allowed_purposes",
+    "allowed_capabilities",
+    "memory_policy",
+    "requires_governance",
+    "created_at"
+  ],
+  "properties": {
+    "version": { "type": "string", "const": "0.1.0" },
+    "agent_ref": { "type": "string", "minLength": 1 },
+    "agent_type": { "type": "string", "minLength": 1 },
+    "scope": { "type": "string", "minLength": 1 },
+    "organization_ref": { "type": "string", "minLength": 1 },
+    "allowed_purposes": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "allowed_capabilities": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "memory_policy": {
+      "type": "object",
+      "required": [
+        "scope",
+        "stores_raw_keys",
+        "stores_unbounded_phi",
+        "requires_governed_projection",
+        "notes"
+      ],
+      "properties": {
+        "scope": { "type": "string", "minLength": 1 },
+        "stores_raw_keys": { "type": "boolean" },
+        "stores_unbounded_phi": { "type": "boolean" },
+        "requires_governed_projection": { "type": "boolean" },
+        "notes": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "requires_governance": { "type": "boolean" },
+    "created_at": { "type": "string", "minLength": 1 }
+  },
+  "additionalProperties": false
+}
