@@ -2,7 +2,9 @@
 
 This scaffold includes conservative validation scripts in `package.json`.
 
-- `npm run validate:schemas` compiles JSON Schemas with `ajv-cli`.
+Run `npm install` once to install the pinned validation dependency from `package-lock.json`.
+
+- `npm run validate:schemas` compiles JSON Schemas with the local validation script and `ajv`.
 - `npm run validate:examples` validates the current example files against their matching schemas.
 - `npm run validate` runs both.
 

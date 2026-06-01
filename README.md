@@ -20,9 +20,17 @@ This repository is the initial conceptual and contractual scaffold for the platf
 | Who is behind it? | Voither can present this repository as Voither PrivateHealthCloud. |
 | What is the platform name? | HealthOS Private Cloud. |
 | What is Apple Silicon here? | The preferred private cloud compute substrate. |
-| What is it not? | Not an app, not an EHR skin, not a UI, not a single-device system, not a finished runtime. |
+| What is it not? | Not an app, not an EHR skin, not a UI, not a homelab, not a single-device system, not a finished runtime. |
 | Core rule | Apps, agents, models, and integrations access governed capabilities, not raw data. |
 | Current status | Conceptual and contractual scaffold only. |
+
+## Central Thesis
+
+Healthcare applications should not own compliance, identity, data custody, model routing, or reidentification logic.
+
+They should run inside a governed private healthcare cloud.
+
+Apps, agents, models, and integrations do not access raw clinical data directly. They access governed capabilities, receive mediated results, and leave audit and provenance trails.
 
 ## Product Boundary
 
