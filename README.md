@@ -334,85 +334,9 @@ flowchart LR
 
 Each provider must define runtime, locality, PHI policy, capability profile, versioning, provenance behavior, and fallback behavior. Local and private-cloud providers are preferred for sensitive work. External providers are denied by default unless governance explicitly allows them.
 
-## Applications
+## Applications/Stage
 
-Applications are governed clients of HealthOS. They declare capabilities, requested data classes, outputs, and human approval points. They receive safe references, mediated views, or governed results rather than raw storage access.
-
-| Application | Role | Example Capabilities |
-| --- | --- | --- |
-| Scribe | Clinical documentation, transcription, summarization, draft generation. | `transcribe_session_audio`, `create_clinical_draft`, `summarize_patient_context`, `search_patient_context` |
-| Veridia | Patient experience, consent, identity review, health memory, access control. | consent review, access history, patient context review, export request |
-| CloudClinic | Service operations, institutional workflows, queues, clinical coordination. | workflow queue coordination, task assignment, governed integration request |
-
-## Integrations
-
-Integrations connect HealthOS to external systems through governed APIs, MCP, webhooks, future FHIR/HL7 connectors, imports, exports, and provider-specific adapters.
-
-```mermaid
-flowchart LR
-  External["External system"]
-  IntegrationGateway["Integration Gateway"]
-  Capability["CapabilityRequest"]
-  Governance["GovernanceDecision"]
-  Transform["Transform / import / export"]
-  Audit["Audit + provenance"]
-
-  External --> IntegrationGateway
-  IntegrationGateway --> Capability
-  Capability --> Governance
-  Governance --> Transform
-  Transform --> Audit
-```
-
-## First Proof
-
-The first proof is not a complete app. It is a governed capability path.
-
-```mermaid
-flowchart LR
-  Scribe["Scribe"]
-  Request["search_patient_context"]
-  AppGateway["Application Gateway"]
-  Governance["Governance Service"]
-  Data["Data Service"]
-  Model["Model Service if permitted"]
-  Audit["Audit + provenance"]
-  Result["Traceable governed result"]
-
-  Scribe --> Request
-  Request --> AppGateway
-  AppGateway --> Governance
-  Governance --> Data
-  Governance --> Model
-  Data --> Audit
-  Model --> Audit
-  Audit --> Result
-  Result --> Scribe
-```
-
-Acceptance for the first proof:
-
-- Scribe does not access data directly.
-- Scribe calls a capability.
-- The capability passes through governance.
-- Governed projections or safe references are returned.
-- Output generates provenance.
-- Finalization requires approval when configured.
-
-## Repository Map
-
-```text
-PrivateHealthCloud/
-|-- README.md
-|-- docs/                 Conceptual architecture and guardrails
-|-- contracts/            JSON Schemas for data, identity, consent, governance, agents, models, apps, integrations, audit, security
-|-- services/             Service responsibility placeholders, no runtime implementation
-|-- storage/              Future storage schemas, migrations, projections, indexes
-|-- apps/                 Governed app examples: Scribe, Veridia, CloudClinic
-|-- infra/                Apple Silicon infrastructure, private networking, containers, observability, backup
-|-- examples/             Minimal valid JSON examples
-`-- tests/                Future validation plan
-```
+Stages are governed clients of HealthOS. They declare capabilities, requested data classes, outputs, and human approval points. They receive safe references, mediated views, or governed results rather than raw storage access.
 
 ## Contracts And Examples
 
@@ -424,34 +348,6 @@ PrivateHealthCloud/
 | Governance | `GovernanceDecision` |
 | Agents | `AgentManifest`, `AgentEvent` |
 | Models | `ModelProviderManifest` |
-| Applications | `ApplicationManifest` |
-| Integrations | `CapabilityRequest` |
-| Audit | `AuditEvent`, `ProvenanceRecord` |
-| Security | `AccessPolicy` |
-
-Validate the scaffold:
-
-```bash
-npm run validate
-```
-
-Current validation checks:
-
-- JSON Schemas compile.
-- Example application, agent, capability request, governance decision, consent record, audit event, and provenance record validate against their matching schemas.
-
-## Initial Milestones
-
-```mermaid
-flowchart LR
-  M0["Milestone 0<br/>Conceptual and Contractual Kernel<br/>README, docs, JSON contracts, examples"]
-  M1["Milestone 1<br/>Private Cloud Skeleton<br/>service outlines, artifact store, audit log, governance evaluator"]
-  M2["Milestone 2<br/>First Governed Capability<br/>patient refs, session artifacts, agent context, search"]
-  M3["Milestone 3<br/>Governed Model Runtime<br/>providers, transcription, embeddings, provenance, denial policy"]
-  M4["Milestone 4<br/>Scribe Proof<br/>governed projections, provenance, approval gates"]
-
-  M0 --> M1 --> M2 --> M3 --> M4
-```
 
 ## Repository Status
 
